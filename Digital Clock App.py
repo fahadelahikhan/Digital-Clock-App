@@ -1,222 +1,204 @@
 import tkinter as tk
 from datetime import datetime
-import time
 
 
-class DigitalClock:
+class SimpleClock:
     def __init__(self):
-        self.window = tk.Tk()
-        self.window.title("Digital Clock")
-        self.window.geometry("450x200")
-        self.window.resizable(False, False)
-        self.window.configure(bg='#1a1a1a')
+        # Create main window
+        self.root = tk.Tk()
+        self.root.title("My Digital Clock")
+        self.root.geometry("400x180")
+        self.root.resizable(False, False)
 
-        # Clock settings
-        self.is_24_hour = True
-        self.show_seconds = True
+        # Clock display settings
+        self.show_24_hour = True
+        self.display_seconds = True
+        self.current_theme = 0
 
-        # Colors
-        self.bg_color = '#1a1a1a'
-        self.time_color = '#00ff41'  # Matrix green
-        self.date_color = '#ffffff'
-        self.button_color = '#333333'
-
-        self.setup_ui()
-        self.update_clock()
-
-    def setup_ui(self):
-        # Main frame
-        main_frame = tk.Frame(self.window, bg=self.bg_color)
-        main_frame.pack(fill='both', expand=True, padx=20, pady=20)
-
-        # Time display
-        self.time_label = tk.Label(
-            main_frame,
-            font=('Digital-7', 48, 'bold'),  # Digital font style
-            bg=self.bg_color,
-            fg=self.time_color,
-            text="00:00:00"
-        )
-        self.time_label.pack(pady=(20, 10))
-
-        # Date display
-        self.date_label = tk.Label(
-            main_frame,
-            font=('Arial', 14, 'normal'),
-            bg=self.bg_color,
-            fg=self.date_color,
-            text="Monday, January 1, 2024"
-        )
-        self.date_label.pack(pady=(0, 20))
-
-        # Control buttons frame
-        button_frame = tk.Frame(main_frame, bg=self.bg_color)
-        button_frame.pack(pady=(10, 0))
-
-        # 12/24 hour toggle button
-        self.format_button = tk.Button(
-            button_frame,
-            text="12H",
-            font=('Arial', 10, 'bold'),
-            bg=self.button_color,
-            fg='white',
-            activebackground='#555555',
-            activeforeground='white',
-            bd=0,
-            padx=15,
-            pady=5,
-            command=self.toggle_format
-        )
-        self.format_button.pack(side='left', padx=(0, 10))
-
-        # Seconds toggle button
-        self.seconds_button = tk.Button(
-            button_frame,
-            text="Hide Sec",
-            font=('Arial', 10, 'bold'),
-            bg=self.button_color,
-            fg='white',
-            activebackground='#555555',
-            activeforeground='white',
-            bd=0,
-            padx=15,
-            pady=5,
-            command=self.toggle_seconds
-        )
-        self.seconds_button.pack(side='left', padx=(0, 10))
-
-        # Theme toggle button
-        self.theme_button = tk.Button(
-            button_frame,
-            text="Theme",
-            font=('Arial', 10, 'bold'),
-            bg=self.button_color,
-            fg='white',
-            activebackground='#555555',
-            activeforeground='white',
-            bd=0,
-            padx=15,
-            pady=5,
-            command=self.cycle_theme
-        )
-        self.theme_button.pack(side='left')
-
-        # Bind keyboard shortcuts
-        self.window.bind('<Key-f>', lambda e: self.toggle_format())
-        self.window.bind('<Key-s>', lambda e: self.toggle_seconds())
-        self.window.bind('<Key-t>', lambda e: self.cycle_theme())
-        self.window.bind('<Escape>', lambda e: self.window.quit())
-
-        # Make window focusable for keyboard events
-        self.window.focus_set()
-
-        # Center window on screen
-        self.center_window()
-
-    def center_window(self):
-        """Center the window on the screen"""
-        self.window.update_idletasks()
-        width = self.window.winfo_width()
-        height = self.window.winfo_height()
-        x = (self.window.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.window.winfo_screenheight() // 2) - (height // 2)
-        self.window.geometry(f'{width}x{height}+{x}+{y}')
-
-    def update_clock(self):
-        """Update the clock display"""
-        now = datetime.now()
-
-        # Format time based on settings
-        if self.is_24_hour:
-            if self.show_seconds:
-                time_format = "%H:%M:%S"
-            else:
-                time_format = "%H:%M"
-        else:
-            if self.show_seconds:
-                time_format = "%I:%M:%S %p"
-            else:
-                time_format = "%I:%M %p"
-
-        time_string = now.strftime(time_format)
-
-        # Format date
-        date_string = now.strftime("%A, %B %d, %Y")
-
-        # Update labels
-        self.time_label.config(text=time_string)
-        self.date_label.config(text=date_string)
-
-        # Schedule next update
-        self.window.after(1000, self.update_clock)
-
-    def toggle_format(self):
-        """Toggle between 12-hour and 24-hour format"""
-        self.is_24_hour = not self.is_24_hour
-        button_text = "12H" if self.is_24_hour else "24H"
-        self.format_button.config(text=button_text)
-
-    def toggle_seconds(self):
-        """Toggle seconds display"""
-        self.show_seconds = not self.show_seconds
-        button_text = "Hide Sec" if self.show_seconds else "Show Sec"
-        self.seconds_button.config(text=button_text)
-
-    def cycle_theme(self):
-        """Cycle through different color themes"""
-        themes = [
-            # Matrix theme (default)
-            {'bg': '#1a1a1a', 'time': '#00ff41', 'date': '#ffffff'},
-            # Blue theme
-            {'bg': '#0d1421', 'time': '#00bfff', 'date': '#87ceeb'},
-            # Red theme
-            {'bg': '#2d1b1b', 'time': '#ff4444', 'date': '#ffaaaa'},
-            # Purple theme
-            {'bg': '#2d1b2d', 'time': '#dd44dd', 'date': '#ddaadd'},
-            # Orange theme
-            {'bg': '#2d2d1b', 'time': '#ffaa00', 'date': '#ffddaa'}
+        # Define color themes
+        self.themes = [
+            {"name": "Dark Green", "bg": "#1e1e1e", "time": "#00ff00", "date": "#ffffff"},
+            {"name": "Ocean Blue", "bg": "#001122", "time": "#00aaff", "date": "#88ccff"},
+            {"name": "Sunset", "bg": "#2a1a0a", "time": "#ff6600", "date": "#ffaa66"},
+            {"name": "Purple", "bg": "#1a0a2a", "time": "#cc66ff", "date": "#ddaaff"},
+            {"name": "Classic", "bg": "#000000", "time": "#ffffff", "date": "#cccccc"}
         ]
 
-        # Find current theme and switch to next
-        current_bg = self.bg_color
-        current_index = 0
+        self.create_interface()
+        self.apply_current_theme()
+        self.center_window()
+        self.start_clock()
 
-        for i, theme in enumerate(themes):
-            if theme['bg'] == current_bg:
-                current_index = i
-                break
+    def create_interface(self):
+        """Create all the UI elements"""
+        # Main container
+        self.main_frame = tk.Frame(self.root)
+        self.main_frame.pack(fill='both', expand=True, padx=15, pady=15)
 
-        # Get next theme (cycle back to 0 if at end)
-        next_index = (current_index + 1) % len(themes)
-        new_theme = themes[next_index]
+        # Time display (large font)
+        self.time_display = tk.Label(
+            self.main_frame,
+            font=('Courier', 36, 'bold'),
+            text="00:00:00"
+        )
+        self.time_display.pack(pady=(10, 5))
 
-        # Apply new theme
-        self.bg_color = new_theme['bg']
-        self.time_color = new_theme['time']
-        self.date_color = new_theme['date']
+        # Date display (smaller font)
+        self.date_display = tk.Label(
+            self.main_frame,
+            font=('Arial', 12),
+            text="Loading date..."
+        )
+        self.date_display.pack(pady=(0, 15))
 
-        # Update all components
-        self.window.configure(bg=self.bg_color)
-        self.time_label.configure(bg=self.bg_color, fg=self.time_color)
-        self.date_label.configure(bg=self.bg_color, fg=self.date_color)
+        # Control buttons
+        self.button_frame = tk.Frame(self.main_frame)
+        self.button_frame.pack(pady=10)
 
-        # Update frames
-        for widget in self.window.winfo_children():
-            if isinstance(widget, tk.Frame):
-                widget.configure(bg=self.bg_color)
-                for child in widget.winfo_children():
-                    if isinstance(child, tk.Frame):
-                        child.configure(bg=self.bg_color)
+        # Time format button (12/24 hour)
+        self.format_btn = tk.Button(
+            self.button_frame,
+            text="12H Format",
+            font=('Arial', 9),
+            width=10,
+            command=self.switch_time_format
+        )
+        self.format_btn.pack(side='left', padx=5)
+
+        # Seconds visibility button
+        self.seconds_btn = tk.Button(
+            self.button_frame,
+            text="Hide Seconds",
+            font=('Arial', 9),
+            width=12,
+            command=self.toggle_seconds
+        )
+        self.seconds_btn.pack(side='left', padx=5)
+
+        # Theme change button
+        self.theme_btn = tk.Button(
+            self.button_frame,
+            text="Change Theme",
+            font=('Arial', 9),
+            width=12,
+            command=self.change_theme
+        )
+        self.theme_btn.pack(side='left', padx=5)
+
+        # Add keyboard shortcuts
+        self.root.bind('<Key-f>', lambda e: self.switch_time_format())
+        self.root.bind('<Key-s>', lambda e: self.toggle_seconds())
+        self.root.bind('<Key-t>', lambda e: self.change_theme())
+        self.root.bind('<Escape>', lambda e: self.close_app())
+
+        # Make window accept keyboard input
+        self.root.focus_set()
+
+    def center_window(self):
+        """Position window in center of screen"""
+        self.root.update_idletasks()
+        window_width = self.root.winfo_width()
+        window_height = self.root.winfo_height()
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+
+        x_position = (screen_width - window_width) // 2
+        y_position = (screen_height - window_height) // 2
+
+        self.root.geometry(f'{window_width}x{window_height}+{x_position}+{y_position}')
+
+    def start_clock(self):
+        """Begin the clock update cycle"""
+        self.update_time_display()
+
+    def update_time_display(self):
+        """Update the time and date shown on screen"""
+        current_time = datetime.now()
+
+        # Create time string based on format preference
+        if self.show_24_hour:
+            if self.display_seconds:
+                time_text = current_time.strftime("%H:%M:%S")
+            else:
+                time_text = current_time.strftime("%H:%M")
+        else:
+            if self.display_seconds:
+                time_text = current_time.strftime("%I:%M:%S %p")
+            else:
+                time_text = current_time.strftime("%I:%M %p")
+
+        # Create date string
+        date_text = current_time.strftime("%A, %B %d, %Y")
+
+        # Update display labels
+        self.time_display.config(text=time_text)
+        self.date_display.config(text=date_text)
+
+        # Schedule next update in 1 second
+        self.root.after(1000, self.update_time_display)
+
+    def switch_time_format(self):
+        """Switch between 12-hour and 24-hour time format"""
+        self.show_24_hour = not self.show_24_hour
+
+        # Update button text to show current mode
+        if self.show_24_hour:
+            self.format_btn.config(text="12H Format")
+        else:
+            self.format_btn.config(text="24H Format")
+
+    def toggle_seconds(self):
+        """Show or hide seconds in time display"""
+        self.display_seconds = not self.display_seconds
+
+        # Update button text
+        if self.display_seconds:
+            self.seconds_btn.config(text="Hide Seconds")
+        else:
+            self.seconds_btn.config(text="Show Seconds")
+
+    def change_theme(self):
+        """Cycle through available color themes"""
+        self.current_theme = (self.current_theme + 1) % len(self.themes)
+        self.apply_current_theme()
+
+    def apply_current_theme(self):
+        """Apply the selected color theme to all elements"""
+        theme = self.themes[self.current_theme]
+
+        # Apply colors to main elements
+        self.root.configure(bg=theme["bg"])
+        self.main_frame.configure(bg=theme["bg"])
+        self.time_display.configure(bg=theme["bg"], fg=theme["time"])
+        self.date_display.configure(bg=theme["bg"], fg=theme["date"])
+        self.button_frame.configure(bg=theme["bg"])
+
+        # Apply colors to buttons
+        button_bg = "#444444" if theme["bg"] == "#000000" else "#333333"
+        for button in [self.format_btn, self.seconds_btn, self.theme_btn]:
+            button.configure(
+                bg=button_bg,
+                fg="white",
+                activebackground="#555555",
+                activeforeground="white"
+            )
+
+    def close_app(self):
+        """Safely close the application"""
+        self.root.quit()
+        self.root.destroy()
 
     def run(self):
         """Start the clock application"""
         try:
-            self.window.mainloop()
-        except KeyboardInterrupt:
-            print("\nClock application stopped.")
+            self.root.mainloop()
+        except Exception as error:
+            print(f"An error occurred: {error}")
+        finally:
+            print("Clock application closed.")
 
 
-# Create and run the digital clock
+# Run the clock when script is executed directly
 if __name__ == "__main__":
-    clock = DigitalClock()
-    clock.run()
+    my_clock = SimpleClock()
+    my_clock.run()
