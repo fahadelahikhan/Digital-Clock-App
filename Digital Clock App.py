@@ -15,6 +15,15 @@ class SimpleClock:
         self.display_seconds = True
         self.current_theme = 0
 
+        # Initialize UI component attributes
+        self.main_frame = None
+        self.time_display = None
+        self.date_display = None
+        self.button_frame = None
+        self.format_btn = None
+        self.seconds_btn = None
+        self.theme_btn = None
+
         # Define color themes
         self.themes = [
             {"name": "Dark Green", "bg": "#1e1e1e", "time": "#00ff00", "date": "#ffffff"},
